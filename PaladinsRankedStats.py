@@ -1,4 +1,3 @@
-#CONTACT ME FOR QUESTIONS AND SUGGESTIONS ON DISCORD Aevann#6346
 import sys, os, datetime, pytz, hashlib, requests, json, re, time, gspread, sys, datetime, os, csv, math
 from oauth2client.service_account import ServiceAccountCredentials
 from gspread_formatting import *
@@ -11,7 +10,7 @@ basedir1 = os.path.dirname(os.path.realpath(__file__))
 sheetsapikey1 = f'{basedir1}/sheetsapikey1.json' #INSERT THE LOCATION OF YOUR FIRST GOOGLE SHEETS API KEY
 sheetsapikey2 = f'{basedir1}/sheetsapikey2.json' #INSERT THE LOCATION OF YOUR SECOND GOOGLE SHEETS API KEY
 sheetsapikey3 = f'{basedir1}/sheetsapikey3.json' #INSERT THE LOCATION OF YOUR THIRD GOOGLE SHEETS API KEY
-firstday = '20200304' #ENTER THE FIRST DAY YOU WANNA START COMPILING FROM IN YYYYMMDD FORMAT, MUST NOT BE LATER THAN 30 DAYS FROM TODAY
+firstday = '20201206' #ENTER THE FIRST DAY YOU WANNA START COMPILING FROM IN YYYYMMDD FORMAT, MUST NOT BE LATER THAN 30 DAYS FROM TODAY
 hour = '-1'
 rankindex = ['Qualifying', 'Bronze', 'Bronze', 'Bronze', 'Bronze', 'Bronze', 'Silver', 'Silver', 'Silver', 'Silver', 'Silver', 'Gold', 'Gold', 'Gold', 'Gold', 'Gold', 'Platinum', 'Platinum', 'Platinum', 'Platinum', 'Platinum', 'Diamond', 'Diamond', 'Diamond', 'Diamond', 'Diamond', 'Master', 'Master', 'All Ranks']
 itemindex = ['Illuminate','Resilience','Blast Shields','Haven','Master Riding','Morale Boost','Nimble','Chronos','Kill to Heal','Life Rip','Rejuvenate','Veteran','Bulldozer','Deft Hands','Cauterize','Wrecker']
@@ -747,7 +746,7 @@ while True:
 			for r in ['Qualifying', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Master', 'All Ranks']: rankwinrates = rankwinrates.replace(r, f'{r}: {avgrankwinrates[r]}')
 			open(f'{basedir2}By Player Rank.csv', 'w').write(f'Class,Champion,Player Rank: its average winrate,Champion Winrate,Match Count,Confidence Interval -,Confidence Interval +\n' + rankwinrates)
 
-			open(f'{basedir2}Winrates By Talent (All Ranks).csv', 'w').write(f'{otherversion}\nSource code: github.com/Aevann1/PaladinsRankedStats - Stats for patch: v{patch} - Contact me on discord: Aevann#6346\nClass,Champion,Talent,Winrate,Match Count,Confidence Interval -,Confidence Interval +\n' + str(talentwinrates).replace('"' , "'").replace("'), ('" , "\n").replace(", " , ",").replace("'," , ",").replace(",'" , ",")[3:-3])
+			open(f'{basedir2}Winrates By Talent (All Ranks).csv', 'w').write(f'{otherversion}\nSource code: github.com/Aevann1/PaladinsRankedStats - Stats for patch: v{patch}\nClass,Champion,Talent,Winrate,Match Count,Confidence Interval -,Confidence Interval +\n' + str(talentwinrates).replace('"' , "'").replace("'), ('" , "\n").replace(", " , ",").replace("'," , ",").replace(",'" , ",")[3:-3])
 
 			open(f'{basedir2}By Talent (Diamond+).csv', 'w').write(f'Average winrate of Diamond+ players: {diawr}\nClass,Champion,Talent,Winrate,Match Count,Confidence Interval -,Confidence Interval +\n' + str(diamondpustalentwinrates).replace('"' , "'").replace("'), ('" , "\n").replace(", " , ",").replace("'," , ",").replace(",'" , ",")[3:-3])
 
