@@ -23,7 +23,7 @@ while True:
 			s = json.loads(requests.get(f'http://api.paladins.com/paladinsapi.svc/createsessionJson/{devid}/' + hashlib.md5((f'{devid}createsession{authkey}{t}').encode('utf-8')).hexdigest() + f'/{t}', timeout=10).content)['session_id']
 			patch = json.loads(requests.get(f'http://api.paladins.com/paladinsapi.svc/getpatchinfoJson/{devid}/' + hashlib.md5((f'{devid}getpatchinfo{authkey}{t}').encode('utf-8')).hexdigest() + f'/{s}/{t}', timeout=10).content)['version_string']
 			cclasses = enumerate(json.loads(requests.get(f'http://api.paladins.com/paladinsapi.svc/getchampionsjson/{devid}/' + hashlib.md5((f'{devid}getchampions{authkey}{t}').encode('utf-8')).hexdigest() + f'/{s}/{t}/1', timeout=10).content))
-		except Exception: 
+		except Exception as e: 
 			traceback.print_exc()
 			continue
 		break		
@@ -126,7 +126,7 @@ while True:
 			t = str(datetime.datetime.now(pytz.timezone('UTC')).strftime('%Y%m%d%H%M%S'))
 			while True:
 				try: matches = str(requests.get(f'http://api.paladins.com/paladinsapi.svc/getmatchidsbyqueuejson/{devid}/' + hashlib.md5((f'{devid}getmatchidsbyqueue{authkey}{t}').encode('utf-8')).hexdigest() + f'/{s}/{t}/{queue}/{day}/{hour}', timeout=10).content)
-				except Exception: 
+				except Exception as e: 
 					traceback.print_exc()
 					continue
 				break				
@@ -141,7 +141,7 @@ while True:
 					t = str(datetime.datetime.now(pytz.timezone('UTC')).strftime('%Y%m%d%H%M%S'))
 					while True:
 						try: mdata = requests.get(f'http://api.paladins.com/paladinsapi.svc/getmatchdetailsbatchjson/{devid}/' + hashlib.md5((f'{devid}getmatchdetailsbatch{authkey}{t}').encode('utf-8')).hexdigest() + f'/{s}/{t}/{m}'[:-1], timeout=10).content[1:-1].decode('utf-8')
-						except Exception: 
+						except Exception as e: 
 							traceback.print_exc()
 							continue
 						break
@@ -158,7 +158,7 @@ while True:
 					for player in li:
 						if not player.startswith('{"Account_Level'): player = '{"Account_Level' + player
 						try: player = json.loads(player)
-						except Exception:
+						except Exception as e:
 							traceback.print_exc()
 							print(player)
 							sys.exit()
@@ -405,7 +405,7 @@ while True:
 					
 			while True:
 				try: print(str(requests.get(f'http://api.paladins.com/paladinsapi.svc/getdatausedjson/{devid}/' + hashlib.md5((f'{devid}getdataused{authkey}{t}').encode('utf-8')).hexdigest() + f'/{s}/{t}', timeout=10).content))
-				except Exception: 
+				except Exception as e: 
 					traceback.print_exc()
 					continue
 				break
@@ -754,7 +754,7 @@ while True:
 			for i in ['Winrates By Talent (All Ranks)', 'By Talent (Diamond+)', 'By Player Rank', 'By Enemy Champion', 'By Friendly Champion', 'By Map (All)', 'By Map (D+)', 'By Card (All)', 'By Card (D+)', 'By Item (All)', 'By Item (D+)', 'By Skin', 'By Composition', 'By Party Size (Bronze to Platinum)', 'By Party Size (D+)', 'Banrates', 'Average DPS,HPS,SPS (All)', 'Average DPS,HPS,SPS (D+)']:
 				while True:
 					try: sheet.values_update(i,params={'valueInputOption': 'USER_ENTERED'},body={'values': list(csv.reader(open(f'{basedir2}{i}.csv')))})
-					except Exception:
+					except Exception as e:
 						if 'Quota exceeded for quota group' not in str(e):
 							traceback.print_exc()
 						gcn += 1
@@ -773,7 +773,7 @@ while True:
 						if val not in cnames:
 							format_cell_range(sheet, f'B{n}:B{n}', cellFormat(textFormat=textFormat(bold=True)))
 							cnames += f'{val},'
-					except Exception:
+					except Exception as e:
 						if 'uota' not in str(e):
 							traceback.print_exc()
 							sys.exit()
@@ -795,7 +795,7 @@ while True:
 						if val not in cnames:
 							format_cell_range(sheet, f'B{n}:B{n}', cellFormat(textFormat=textFormat(bold=True)))
 							cnames += f'{val},'
-					except Exception:			
+					except Exception as e:			
 						if 'uota' not in str(e):
 							traceback.print_exc()
 							sys.exit()
