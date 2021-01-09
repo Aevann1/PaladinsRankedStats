@@ -1,11 +1,11 @@
-import sys, os, datetime, pytz, hashlib, requests, json, re, time, gspread, sys, datetime, os, csv, math
+import sys, os, datetime, pytz, hashlib, requests, json, re, time, gspread, sys, datetime, os, csv, math, traceback
 from oauth2client.service_account import ServiceAccountCredentials
 from gspread_formatting import *
 
 devid = '' #INSERT YOUR API HIREZ DEV ID
 authkey = '' #INSERT YOUR HIREZ API AUTH KEY
-kbmgooglesheetid = '1g05xgJnAR0JQXzreEOqG-xV5cd0izx67ZvOTXMZe_Zg' #INSERT YOUR KEYBOARD & MOUSE GOOGLE SHEET ID (YOU'LL FIND IT IN ITS URL)
-controllergooglesheetid = '12TrxqtZbp2G_7p0vJYPOZvpSbCxNHFIFL_d767BTF9g' #INSERT YOUR CONTROLLER GOOGLE SHEET ID (YOU'LL FIND IT IN ITS URL)
+kbmgooglesheetid = '' #INSERT YOUR KEYBOARD & MOUSE GOOGLE SHEET ID (YOU'LL FIND IT IN ITS URL)
+controllergooglesheetid = '' #INSERT YOUR CONTROLLER GOOGLE SHEET ID (YOU'LL FIND IT IN ITS URL)
 basedir1 = os.path.dirname(os.path.realpath(__file__))
 sheetsapikey1 = f'{basedir1}/sheetsapikey1.json' #INSERT THE LOCATION OF YOUR FIRST GOOGLE SHEETS API KEY
 sheetsapikey2 = f'{basedir1}/sheetsapikey2.json' #INSERT THE LOCATION OF YOUR SECOND GOOGLE SHEETS API KEY
@@ -23,8 +23,8 @@ while True:
 			s = json.loads(requests.get(f'http://api.paladins.com/paladinsapi.svc/createsessionJson/{devid}/' + hashlib.md5((f'{devid}createsession{authkey}{t}').encode('utf-8')).hexdigest() + f'/{t}', timeout=10).content)['session_id']
 			patch = json.loads(requests.get(f'http://api.paladins.com/paladinsapi.svc/getpatchinfoJson/{devid}/' + hashlib.md5((f'{devid}getpatchinfo{authkey}{t}').encode('utf-8')).hexdigest() + f'/{s}/{t}', timeout=10).content)['version_string']
 			cclasses = enumerate(json.loads(requests.get(f'http://api.paladins.com/paladinsapi.svc/getchampionsjson/{devid}/' + hashlib.md5((f'{devid}getchampions{authkey}{t}').encode('utf-8')).hexdigest() + f'/{s}/{t}/1', timeout=10).content))
-		except Exception as e: 
-			print(e)
+		except Exception: 
+			traceback.print_exc()
 			continue
 		break		
 	cclass = {}
@@ -126,8 +126,8 @@ while True:
 			t = str(datetime.datetime.now(pytz.timezone('UTC')).strftime('%Y%m%d%H%M%S'))
 			while True:
 				try: matches = str(requests.get(f'http://api.paladins.com/paladinsapi.svc/getmatchidsbyqueuejson/{devid}/' + hashlib.md5((f'{devid}getmatchidsbyqueue{authkey}{t}').encode('utf-8')).hexdigest() + f'/{s}/{t}/{queue}/{day}/{hour}', timeout=10).content)
-				except Exception as e: 
-					print(e)
+				except Exception: 
+					traceback.print_exc()
 					continue
 				break				
 
@@ -141,8 +141,8 @@ while True:
 					t = str(datetime.datetime.now(pytz.timezone('UTC')).strftime('%Y%m%d%H%M%S'))
 					while True:
 						try: mdata = requests.get(f'http://api.paladins.com/paladinsapi.svc/getmatchdetailsbatchjson/{devid}/' + hashlib.md5((f'{devid}getmatchdetailsbatch{authkey}{t}').encode('utf-8')).hexdigest() + f'/{s}/{t}/{m}'[:-1], timeout=10).content[1:-1].decode('utf-8')
-						except Exception as e: 
-							print(e)
+						except Exception: 
+							traceback.print_exc()
 							continue
 						break
 					m = ''
@@ -158,8 +158,8 @@ while True:
 					for player in li:
 						if not player.startswith('{"Account_Level'): player = '{"Account_Level' + player
 						try: player = json.loads(player)
-						except Exception as e:
-							print(e)
+						except Exception:
+							traceback.print_exc()
 							print(player)
 							sys.exit()
 						champ = player['Reference_Name'].replace('\\', '')
@@ -405,8 +405,8 @@ while True:
 					
 			while True:
 				try: print(str(requests.get(f'http://api.paladins.com/paladinsapi.svc/getdatausedjson/{devid}/' + hashlib.md5((f'{devid}getdataused{authkey}{t}').encode('utf-8')).hexdigest() + f'/{s}/{t}', timeout=10).content))
-				except Exception as e: 
-					print(e)
+				except Exception: 
+					traceback.print_exc()
 					continue
 				break
 
@@ -754,8 +754,9 @@ while True:
 			for i in ['Winrates By Talent (All Ranks)', 'By Talent (Diamond+)', 'By Player Rank', 'By Enemy Champion', 'By Friendly Champion', 'By Map (All)', 'By Map (D+)', 'By Card (All)', 'By Card (D+)', 'By Item (All)', 'By Item (D+)', 'By Skin', 'By Composition', 'By Party Size (Bronze to Platinum)', 'By Party Size (D+)', 'Banrates', 'Average DPS,HPS,SPS (All)', 'Average DPS,HPS,SPS (D+)']:
 				while True:
 					try: sheet.values_update(i,params={'valueInputOption': 'USER_ENTERED'},body={'values': list(csv.reader(open(f'{basedir2}{i}.csv')))})
-					except Exception as e:
-						if 'Quota exceeded for quota group' not in str(e): print(e)
+					except Exception:
+						if 'Quota exceeded for quota group' not in str(e):
+							traceback.print_exc()
 						gcn += 1
 						sheet = gcs[gcn].open_by_key(googlesheetid)
 						continue
@@ -772,9 +773,9 @@ while True:
 						if val not in cnames:
 							format_cell_range(sheet, f'B{n}:B{n}', cellFormat(textFormat=textFormat(bold=True)))
 							cnames += f'{val},'
-					except Exception as e:
-						if 'Quota exceeded for quota group' not in str(e):
-							print(e)
+					except Exception:
+						if 'uota' not in str(e):
+							traceback.print_exc()
 							sys.exit()
 						gcn += 1
 						gc = gcs[gcn]
@@ -794,9 +795,9 @@ while True:
 						if val not in cnames:
 							format_cell_range(sheet, f'B{n}:B{n}', cellFormat(textFormat=textFormat(bold=True)))
 							cnames += f'{val},'
-					except Exception as e:			
-						if 'Quota exceeded for quota group' not in str(e):
-							print(e)
+					except Exception:			
+						if 'uota' not in str(e):
+							traceback.print_exc()
 							sys.exit()
 						gcn += 1
 						gc = gcs[gcn]
