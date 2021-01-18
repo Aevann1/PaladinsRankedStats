@@ -762,8 +762,19 @@ while True:
 						continue
 					break
 
-			sheet = gc.open_by_key(googlesheetid).worksheet('Winrates By Talent (All Ranks)')
-			format_cell_range(sheet, f'B4:B{sheet.row_count}', cellFormat(textFormat=textFormat(bold=False)))
+			while True:
+				try:
+					sheet = gc.open_by_key(googlesheetid).worksheet('Winrates By Talent (All Ranks)')
+					format_cell_range(sheet, f'B4:B{sheet.row_count}', cellFormat(textFormat=textFormat(bold=False)))
+				except Exception as e:
+					if 'uota' not in str(e):
+						traceback.print_exc()
+						sys.exit()
+					gcn += 1
+					gc = gcs[gcn]
+					sheet = gc.open_by_key(googlesheetid).worksheet('Winrates By Talent (All Ranks)')
+					continue
+				break
 			n = 1
 			cnames = ''
 			for val in gc.open_by_key(googlesheetid).worksheet('Winrates By Talent (All Ranks)').col_values(2):
@@ -784,8 +795,19 @@ while True:
 					n += 1
 					break
 
-			sheet = gc.open_by_key(googlesheetid).worksheet('By Talent (Diamond+)')
-			format_cell_range(sheet, f'B3:B{sheet.row_count}', cellFormat(textFormat=textFormat(bold=False)))
+			while True:
+				try:
+					sheet = gc.open_by_key(googlesheetid).worksheet('By Talent (Diamond+)')
+					format_cell_range(sheet, f'B3:B{sheet.row_count}', cellFormat(textFormat=textFormat(bold=False)))
+				except Exception as e:			
+					if 'uota' not in str(e):
+						traceback.print_exc()
+						sys.exit()
+					gcn += 1
+					gc = gcs[gcn]
+					sheet = gc.open_by_key(googlesheetid).worksheet('By Talent (Diamond+)')
+					continue
+				break
 			n = 1
 			cnames = ''
 			for val in gc.open_by_key(googlesheetid).worksheet('By Talent (Diamond+)').col_values(2):
